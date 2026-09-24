@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import type { AbsenceAttributes } from "../../models/interfaces";
 import ServiceSelector from "../../core/ServiceSelector";
 import "./home.page.scss";
+import { useAuth } from "../../hooks/useAuth";
 
 function HomePage() {
   const [absences, setAbsences] = useState<AbsenceAttributes[]>();
+
+  useAuth();
 
   useEffect(() => {
     ServiceSelector.absenceService

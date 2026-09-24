@@ -9,6 +9,20 @@ export class AbsenceService {
 
   constructor() {
     this.http = httpClient.create({ baseURL: apiUrl });
+    this.http.interceptors.request.use(
+      (config) => {
+        // Exemple : ajouter un token d'authentification
+        const token = localStorage.getItem("jwtoken");
+        if (token) {
+          config.headers["Authorization"] = `Bearer ${token}`;
+        }
+        console.log("Requête interceptée :", config.url);
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
   }
 
   public async getOnGoingAbsences(): Promise<AbsenceAttributes[]> {

@@ -1,13 +1,42 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router";
+import ServiceSelector from "../../core/ServiceSelector";
+
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-  }
+  const formik = useFormik<LoginFormValues>({
+    initialValues: { email: "", password: "" },
+    validate: (values) => {
+      const errors: Partial<LoginFormValues> = {};
+      if (!values.email) {
+        errors.email = "L'email est requis";
+      }
+      if (!values.password) {
+        errors.password = "Le mot de passe est requis";
+      }
+      return errors;
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      setLoginError(null);
+      try {
+        await ServiceSelector.authService.login(values.email, values.password);
+        navigate("/");
+      } catch {
+        setLoginError("Email ou mot de passe incorrect");
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4">
@@ -27,7 +56,13 @@ function LoginPage() {
             </p>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
+          {loginError && (
+            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-red-700">
+              {loginError}
+            </div>
+          )}
+
+          <form className="space-y-5" onSubmit={formik.handleSubmit} noValidate>
             <div>
               <label
                 htmlFor="email"
@@ -54,14 +89,25 @@ function LoginPage() {
                 </span>
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   autoComplete="email"
                   placeholder="vous@exemple.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 pl-10 pr-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
+                    formik.touched.email && formik.errors.email
+                      ? "border-red-400"
+                      : "border-slate-300 focus:border-indigo-500"
+                  }`}
                 />
               </div>
+              {formik.touched.email && formik.errors.email && (
+                <p className="mt-1.5 text-xs text-red-600">
+                  {formik.errors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -90,12 +136,18 @@ function LoginPage() {
                 </span>
                 <input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 pl-10 pr-10 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full rounded-lg border pl-10 pr-10 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
+                    formik.touched.password && formik.errors.password
+                      ? "border-red-400"
+                      : "border-slate-300 focus:border-indigo-500"
+                  }`}
                 />
                 <button
                   type="button"
@@ -145,6 +197,11 @@ function LoginPage() {
                   )}
                 </button>
               </div>
+              {formik.touched.password && formik.errors.password && (
+                <p className="mt-1.5 text-xs text-red-600">
+                  {formik.errors.password}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center justify-between text-sm">
@@ -165,9 +222,10 @@ function LoginPage() {
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              disabled={formik.isSubmitting}
+              className="w-full rounded-lg bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Se connecter
+              {formik.isSubmitting ? "Connexion..." : "Se connecter"}
             </button>
           </form>
         </div>
