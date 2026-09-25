@@ -57,7 +57,7 @@ function LoginPage() {
           </div>
 
           {loginError && (
-            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-2.5 text-sm text-red-700">
+            <div className="mb-5 rounded-lg bg-danger-50 border border-danger-200 px-4 py-2.5 text-sm text-danger-700">
               {loginError}
             </div>
           )}
@@ -96,15 +96,15 @@ function LoginPage() {
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
+                  className={`w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition ${
                     formik.touched.email && formik.errors.email
-                      ? "border-red-400"
-                      : "border-slate-300 focus:border-indigo-500"
+                      ? "border-danger-400"
+                      : "border-slate-300 focus:border-brand-500"
                   }`}
                 />
               </div>
               {formik.touched.email && formik.errors.email && (
-                <p className="mt-1.5 text-xs text-red-600">
+                <p className="mt-1.5 text-xs text-danger-600">
                   {formik.errors.email}
                 </p>
               )}
@@ -143,10 +143,10 @@ function LoginPage() {
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`w-full rounded-lg border pl-10 pr-10 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
+                  className={`w-full rounded-lg border pl-10 pr-10 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition ${
                     formik.touched.password && formik.errors.password
-                      ? "border-red-400"
-                      : "border-slate-300 focus:border-indigo-500"
+                      ? "border-danger-400"
+                      : "border-slate-300 focus:border-brand-500"
                   }`}
                 />
                 <button
@@ -198,7 +198,7 @@ function LoginPage() {
                 </button>
               </div>
               {formik.touched.password && formik.errors.password && (
-                <p className="mt-1.5 text-xs text-red-600">
+                <p className="mt-1.5 text-xs text-danger-600">
                   {formik.errors.password}
                 </p>
               )}
@@ -208,13 +208,13 @@ function LoginPage() {
               <label className="flex items-center gap-2 text-slate-600 select-none">
                 <input
                   type="checkbox"
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
                 />
                 Se souvenir de moi
               </label>
               <a
                 href="#"
-                className="text-indigo-600 hover:text-indigo-700 font-medium"
+                className="text-brand-600 hover:text-brand-700 font-medium"
               >
                 Mot de passe oublié ?
               </a>
@@ -223,7 +223,7 @@ function LoginPage() {
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className="w-full rounded-lg bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-primary w-full py-2.5 font-semibold shadow-sm"
             >
               {formik.isSubmitting ? "Connexion..." : "Se connecter"}
             </button>
