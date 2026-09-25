@@ -9,6 +9,7 @@
   --color-brand-800: #3730a3;
 
   --color-success-50: #ecfdf5;
+  --color-success-200: #a7f3d0;
   --color-success-700: #047857;
 
   --color-danger-50: #fef2f2;
@@ -20,12 +21,24 @@
 }
 
 @layer components {
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 focus:ring-brand-500;
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 border border-slate-300 text-slate-700 hover:bg-slate-50 focus:ring-slate-300;
+  }
+
+  .form-control {
+    @apply w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-800 transition placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-60;
+  }
+
+  .col-form-label {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
   }
 
   .badge-success {

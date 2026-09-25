@@ -9,6 +9,7 @@ import {
   getAbsenceGroup,
 } from "../../utils/absence.utils";
 import AbsenceGroupSection from "./components/absence-group-section";
+import { Link } from "react-router";
 
 function HomePage() {
   const [absences, setAbsences] = useState<AbsenceAttributes[]>();
@@ -36,8 +37,7 @@ function HomePage() {
     for (const group of Object.values(groups)) {
       group.sort(
         (a, b) =>
-          new Date(a.absenceDate).getTime() -
-          new Date(b.absenceDate).getTime(),
+          new Date(a.absenceDate).getTime() - new Date(b.absenceDate).getTime(),
       );
     }
 
@@ -48,6 +48,12 @@ function HomePage() {
     <div className="w-full px-4 sm:px-6 py-8 home-page">
       <h2 className="welcome">Bonjour{user ? ` ${user.name}` : ""}</h2>
       <p className="text-slate-500 mt-1 mb-8">Absences en cours</p>
+
+      <div className="flex justify-end">
+        <Link to={"/marquer-absence"}>
+          <button className="btn">Marquer une absence</button>
+        </Link>
+      </div>
 
       {!absences && (
         <p className="text-slate-500">Chargement des absences...</p>

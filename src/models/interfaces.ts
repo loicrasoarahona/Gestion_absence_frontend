@@ -57,3 +57,25 @@ export interface UserAttributes {
     name: string;
   }[];
 }
+
+export interface ClassLevelAttributes {
+  id: number;
+  name: string;
+}
+
+export class StudentAttributes {
+  id?: number;
+  name?: string;
+  surname?: string;
+  classLevelId?: number;
+  address?: number;
+  parents?: ParentAttributes[];
+}
+
+export class ParentAttributes {
+  id?: number;
+  name?: string;
+  surname?: string;
+  email?: string;
+  phone?: string;
+}

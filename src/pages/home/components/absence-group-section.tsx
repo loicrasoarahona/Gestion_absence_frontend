@@ -19,8 +19,8 @@ function AbsenceGroupSection({ title, absences }: AbsenceGroupSectionProps) {
           <thead>
             <tr>
               <th>Élève</th>
-              <th>Absent depuis</th>
-              <th>Alerte</th>
+              <th>Date</th>
+              <th>Alerté</th>
               <th className="text-right">Actions</th>
             </tr>
           </thead>
