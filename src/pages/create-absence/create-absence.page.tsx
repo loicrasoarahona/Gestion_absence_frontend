@@ -71,6 +71,8 @@ function CreateAbsence() {
         setSelectedStudent(null);
         setStudentQuery("");
         setOverrideDate(false);
+
+        navigate("/");
       } catch (err) {
         console.error(err);
         setSubmitError("Une erreur est survenue lors de l'enregistrement.");
@@ -122,11 +124,7 @@ function CreateAbsence() {
   return (
     <div className="create-absence-page container mx-auto">
       <div className="my-5">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="btn mb-5"
-        >
+        <button type="button" onClick={() => navigate(-1)} className="btn mb-5">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
