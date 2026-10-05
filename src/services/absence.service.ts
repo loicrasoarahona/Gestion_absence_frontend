@@ -2,6 +2,8 @@
 import type { AxiosInstance } from "axios";
 import type {
   AbsenceAttributes,
+  AlertSentAttributes,
+  AlertSentType,
   ClassLevelAttributes,
   StudentAttributes,
 } from "../models/interfaces";
@@ -60,6 +62,24 @@ export class AbsenceService {
   ): Promise<AbsenceAttributes[]> {
     const url = "/absences";
     const result = await this.http.post(url, body);
+    return result.data;
+  }
+
+  public async getMessageModel(
+    absenceId: number,
+    alertType: AlertSentType,
+  ): Promise<{ message: string }> {
+    const url = `/absences/${absenceId}/message-model?alertType=${alertType}`;
+    const result = await this.http.get(url);
+    return result.data;
+  }
+
+  public async getLastAlertSent(
+    absenceId: number,
+    alertType: AlertSentType,
+  ): Promise<AlertSentAttributes | null> {
+    const url = `/absences/${absenceId}/last-alert-sent?alertType=${alertType}`;
+    const result = await this.http.get(url);
     return result.data;
   }
 }

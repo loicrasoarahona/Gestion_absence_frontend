@@ -4,9 +4,14 @@ import AbsenceRow from "./absence-row";
 interface AbsenceGroupSectionProps {
   title: string;
   absences: AbsenceAttributes[];
+  onOpenSendAlert: (absenceId: number) => void;
 }
 
-function AbsenceGroupSection({ title, absences }: AbsenceGroupSectionProps) {
+function AbsenceGroupSection({
+  title,
+  absences,
+  onOpenSendAlert,
+}: AbsenceGroupSectionProps) {
   if (absences.length === 0) return null;
 
   return (
@@ -31,6 +36,7 @@ function AbsenceGroupSection({ title, absences }: AbsenceGroupSectionProps) {
                   absence.id ?? `${absence.studentId}-${absence.absenceDate}`
                 }
                 absence={absence}
+                onOpenSendAlert={onOpenSendAlert}
               />
             ))}
           </tbody>

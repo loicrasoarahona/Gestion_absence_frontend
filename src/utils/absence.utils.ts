@@ -51,7 +51,7 @@ export function formatAbsenceSince(dateInput: Date | string): string {
     date.getMinutes() === 0
       ? `${date.getHours()}h`
       : `${date.getHours()}h${date.getMinutes().toString().padStart(2, "0")}`;
-  return `Absent le ${day} ${month} à ${time}`;
+  return `${day} ${month} à ${time}`;
 }
 
 export function getAlertStatus(alerts?: AlertSentAttributes[]): {

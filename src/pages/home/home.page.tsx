@@ -10,10 +10,15 @@ import {
 } from "../../utils/absence.utils";
 import AbsenceGroupSection from "./components/absence-group-section";
 import { Link } from "react-router";
+import ModalComponent from "../../components/modal/modal.component";
+import SendAlertComponent from "./components/send-alert.component";
 
 function HomePage() {
   const [absences, setAbsences] = useState<AbsenceAttributes[]>();
   const { user } = useAuth();
+  const [selectedAbsenceId, setSelectedAbsenceId] = useState<number | null>(
+    null,
+  );
 
   useEffect(() => {
     ServiceSelector.absenceService
@@ -21,6 +26,11 @@ function HomePage() {
       .then(setAbsences)
       .catch((err) => console.error(err));
   }, []);
+
+  const handleOpenSendAlert = (absenceId: number) => {
+    setSelectedAbsenceId(absenceId);
+    ServiceSelector.modalService.getOrCreateInstance("modal-send-alert").open();
+  };
 
   const groupedAbsences = useMemo(() => {
     const groups: Record<AbsenceGroupKey, AbsenceAttributes[]> = {
@@ -68,8 +78,13 @@ function HomePage() {
           key={key}
           title={label}
           absences={groupedAbsences[key]}
+          onOpenSendAlert={handleOpenSendAlert}
         />
       ))}
+
+      <ModalComponent id="modal-send-alert" title="Envoyer alerte d'absence">
+        {() => <SendAlertComponent absenceId={selectedAbsenceId} />}
+      </ModalComponent>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 @theme {
   --color-brand-50: #eef2ff;
@@ -68,6 +69,10 @@
 
   .table tbody tr {
     @apply border-b border-slate-100 transition last:border-b-0 hover:bg-slate-50;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
   }
 }
 

@@ -6,9 +6,10 @@ import {
 
 interface AbsenceRowProps {
   absence: AbsenceAttributes;
+  onOpenSendAlert: (absenceId: number) => void;
 }
 
-function AbsenceRow({ absence }: AbsenceRowProps) {
+function AbsenceRow({ absence, onOpenSendAlert }: AbsenceRowProps) {
   const alertStatus = getAlertStatus(absence.alerts);
 
   return (
@@ -29,10 +30,14 @@ function AbsenceRow({ absence }: AbsenceRowProps) {
       </td>
       <td>
         <div className="flex items-center justify-end gap-2">
-          <button type="button" className="btn-secondary">
+          <button
+            type="button"
+            className="btn-secondary cursor-pointer"
+            onClick={() => onOpenSendAlert(absence.id!)}
+          >
             Alerter les parents
           </button>
-          <button type="button" className="btn-primary">
+          <button type="button" className="btn-primary cursor-pointer">
             Confirmer le retour
           </button>
         </div>

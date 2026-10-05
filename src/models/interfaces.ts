@@ -79,3 +79,10 @@ export class ParentAttributes {
   email?: string;
   phone?: string;
 }
+
+const AlertSentType = {
+  PHONE: "phone",
+  EMAIL: "email",
+} as const;
+
+export type AlertSentType = (typeof AlertSentType)[keyof typeof AlertSentType];
