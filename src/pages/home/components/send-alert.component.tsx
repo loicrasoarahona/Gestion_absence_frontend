@@ -90,23 +90,33 @@ const SendAlertComponent: React.FC<Props> = ({ absence }) => {
     <div>
       {/* Dernière alerte envoyée */}
       {lastAlertSent && (
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
+        <div className="mb-4 flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+          <div className="flex items-start gap-2 text-sm text-slate-600">
             <i
-              className={`bi ${
+              className={`mt-0.5 bi ${
                 lastAlertSent.status === "success"
                   ? "bi-check-circle-fill text-success-700"
                   : "bi-exclamation-circle-fill text-danger-600"
               }`}
             ></i>
-            <span>
-              Dernière alerte par{" "}
-              <span className="font-medium text-slate-800">
-                {ALERT_TABS.find((tab) => tab.type === alertType)?.label ??
-                  alertType}
-              </span>{" "}
-              · {formatAbsenceSince(lastAlertSent.alertSentAt)}
-            </span>
+            <div>
+              <p>
+                Dernière alerte par{" "}
+                <span className="font-medium text-slate-800">
+                  {ALERT_TABS.find((tab) => tab.type === alertType)?.label ??
+                    alertType}
+                </span>{" "}
+                · {formatAbsenceSince(lastAlertSent.alertSentAt)}
+              </p>
+              <p className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-400">
+                <i
+                  className={`bi ${
+                    alertType === "email" ? "bi-envelope" : "bi-telephone"
+                  }`}
+                ></i>
+                {lastAlertSent.contactDetails}
+              </p>
+            </div>
           </div>
           <span
             className={
