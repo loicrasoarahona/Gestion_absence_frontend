@@ -6,7 +6,7 @@ import {
 
 interface AbsenceRowProps {
   absence: AbsenceAttributes;
-  onOpenSendAlert: (absenceId: number) => void;
+  onOpenSendAlert: (absence: AbsenceAttributes) => void;
 }
 
 function AbsenceRow({ absence, onOpenSendAlert }: AbsenceRowProps) {
@@ -33,7 +33,7 @@ function AbsenceRow({ absence, onOpenSendAlert }: AbsenceRowProps) {
           <button
             type="button"
             className="btn-secondary cursor-pointer"
-            onClick={() => onOpenSendAlert(absence.id!)}
+            onClick={() => onOpenSendAlert(absence)}
           >
             Alerter les parents
           </button>

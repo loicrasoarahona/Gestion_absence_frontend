@@ -4,7 +4,7 @@ import AbsenceRow from "./absence-row";
 interface AbsenceGroupSectionProps {
   title: string;
   absences: AbsenceAttributes[];
-  onOpenSendAlert: (absenceId: number) => void;
+  onOpenSendAlert: (absence: AbsenceAttributes) => void;
 }
 
 function AbsenceGroupSection({

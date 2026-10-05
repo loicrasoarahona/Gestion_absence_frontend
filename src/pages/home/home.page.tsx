@@ -16,9 +16,8 @@ import SendAlertComponent from "./components/send-alert.component";
 function HomePage() {
   const [absences, setAbsences] = useState<AbsenceAttributes[]>();
   const { user } = useAuth();
-  const [selectedAbsenceId, setSelectedAbsenceId] = useState<number | null>(
-    null,
-  );
+  const [selectedAbsence, setSelectedAbsence] =
+    useState<AbsenceAttributes | null>(null);
 
   useEffect(() => {
     ServiceSelector.absenceService
@@ -27,8 +26,8 @@ function HomePage() {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleOpenSendAlert = (absenceId: number) => {
-    setSelectedAbsenceId(absenceId);
+  const handleOpenSendAlert = (absence: AbsenceAttributes) => {
+    setSelectedAbsence(absence);
     ServiceSelector.modalService.getOrCreateInstance("modal-send-alert").open();
   };
 
@@ -83,7 +82,7 @@ function HomePage() {
       ))}
 
       <ModalComponent id="modal-send-alert" title="Envoyer alerte d'absence">
-        {() => <SendAlertComponent absenceId={selectedAbsenceId} />}
+        {() => <SendAlertComponent absence={selectedAbsence} />}
       </ModalComponent>
     </div>
   );
