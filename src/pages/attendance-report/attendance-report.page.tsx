@@ -4,8 +4,12 @@ import { useAuth } from "../../hooks/useAuth";
 import ServiceSelector from "../../core/ServiceSelector";
 import type { StudentAttendanceReportDto } from "../../models/dto";
 import { dateFormatStd } from "../../utils/date.utils";
-import { getAlertStatus } from "../../utils/absence.utils";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import "./attendance-report.page.scss";
+
+type ReportAbsence = StudentAttendanceReportDto["absences"][number];
+type ReportAlert = ReportAbsence["alerts"][number];
 
 function defaultFromDate() {
   const date = new Date();
@@ -19,6 +23,27 @@ function formatDate(dateInput: Date | string) {
     month: "long",
     year: "numeric",
   });
+}
+
+function getAlertStatus(alerts: ReportAlert[] | undefined): {
+  label: string;
+  sent: boolean;
+} {
+  if (!alerts || alerts.length === 0) {
+    return { label: "Non alerté", sent: false };
+  }
+
+  const successfulTypes = Array.from(
+    new Set(
+      alerts.filter((alert) => alert.status).map((alert) => alert.alertSentType.name),
+    ),
+  );
+
+  if (successfulTypes.length === 0) {
+    return { label: "Alerte échouée", sent: false };
+  }
+
+  return { label: successfulTypes.join(" / "), sent: true };
 }
 
 function AttendanceReportPage() {
@@ -63,6 +88,45 @@ function AttendanceReportPage() {
     };
   }, [studentId, from, to]);
 
+  function handleExportPdf() {
+    if (!report) return;
+
+    const doc = new jsPDF();
+    const studentName = `${report.student.name} ${report.student.surname}`;
+
+    doc.setFontSize(16);
+    doc.text("Rapport d'absences", 14, 18);
+    doc.setFontSize(11);
+    doc.text(`Élève : ${studentName}`, 14, 27);
+    doc.text(
+      `Période : du ${formatDate(report.period.from)} au ${formatDate(report.period.to)}`,
+      14,
+      34,
+    );
+    doc.text(
+      `Total : ${report.totalAbsences} · Justifiées : ${report.justifiedCount} · Non justifiées : ${report.unjustifiedCount}`,
+      14,
+      41,
+    );
+
+    autoTable(doc, {
+      startY: 48,
+      head: [["Date", "Motif", "Justifiée", "Retour", "Alerte"]],
+      body: report.absences.map((absence) => {
+        const alertStatus = getAlertStatus(absence.alerts);
+        return [
+          formatDate(absence.absenceDate),
+          absence.reasonStd?.description || absence.reasonDetail || "—",
+          absence.justified ? "Oui" : "Non",
+          absence.returnDate ? formatDate(absence.returnDate) : "En cours",
+          alertStatus.label,
+        ];
+      }),
+    });
+
+    doc.save(`rapport-absences-${studentName}-${from}-au-${to}.pdf`);
+  }
+
   return (
     <div className="attendance-report-page container mx-auto my-5">
       <button type="button" onClick={() => navigate(-1)} className="btn mb-5">
@@ -83,10 +147,22 @@ function AttendanceReportPage() {
         Retour
       </button>
 
-      <h2 className="text-xl font-semibold text-slate-800">
-        Rapport d'absences
-        {report && ` · ${report.student.name} ${report.student.surname}`}
-      </h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-semibold text-slate-800">
+          Rapport d'absences
+          {report && ` · ${report.student.name} ${report.student.surname}`}
+        </h2>
+
+        <button
+          type="button"
+          className="btn-secondary"
+          onClick={handleExportPdf}
+          disabled={!report}
+        >
+          <i className="bi bi-file-earmark-pdf"></i>
+          Exporter en PDF
+        </button>
+      </div>
 
       <div className="flex flex-wrap items-end gap-3 mt-4 mb-6">
         <div className="form-group">
@@ -157,6 +233,7 @@ function AttendanceReportPage() {
                   <tr>
                     <th>Date</th>
                     <th>Motif</th>
+                    <th>Justifiée</th>
                     <th>Retour</th>
                     <th>Alerte</th>
                   </tr>
@@ -170,13 +247,24 @@ function AttendanceReportPage() {
                           {formatDate(absence.absenceDate)}
                         </td>
                         <td className="text-sm text-slate-600">
-                          {absence.reasonStd?.description ??
-                            absence.reasonDetail ??
+                          {absence.reasonStd?.description ||
+                            absence.reasonDetail ||
                             "—"}
                         </td>
+                        <td>
+                          <span
+                            className={
+                              absence.justified
+                                ? "badge-success"
+                                : "badge-muted"
+                            }
+                          >
+                            {absence.justified ? "Oui" : "Non"}
+                          </span>
+                        </td>
                         <td className="whitespace-nowrap text-sm text-slate-600">
-                          {absence.return
-                            ? formatDate(absence.return.returnDate)
+                          {absence.returnDate
+                            ? formatDate(absence.returnDate)
                             : "En cours"}
                         </td>
                         <td>

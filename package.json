@@ -16,6 +16,8 @@
     "dompurify": "^3.4.16",
     "font-awesome": "^4.7.0",
     "formik": "^2.4.9",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",
