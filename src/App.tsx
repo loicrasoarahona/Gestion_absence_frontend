@@ -7,6 +7,7 @@ import CreateAbsence from "./pages/create-absence/create-absence.page";
 import ConfirmerRetourPage from "./pages/confirmer-retour/confirmer-retour.page";
 import StudentsPage from "./pages/students/students.page";
 import { useAuth } from "./hooks/useAuth";
+import AttendanceReportPage from "./pages/attendance-report/attendance-report.page";
 
 function App() {
   const location = useLocation();
@@ -25,6 +26,10 @@ function App() {
           path="/absences/:id/confirmer-retour"
         />
         <Route Component={StudentsPage} path="/eleves" />
+        <Route
+          Component={AttendanceReportPage}
+          path="/eleves/:id/rapport-absences"
+        />
       </Routes>
     </div>
   );

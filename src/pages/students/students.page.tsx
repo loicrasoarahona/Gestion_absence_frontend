@@ -6,9 +6,11 @@ import type {
   StudentAttributes,
 } from "../../models/interfaces";
 import ServiceSelector from "../../core/ServiceSelector";
+import { useNavigate } from "react-router";
 
 function StudentsPage() {
   useAuth();
+  const navigate = useNavigate();
 
   const [classLevels, setClassLevels] = useState<ClassLevelAttributes[]>();
   const [classLevelId, setClassLevelId] = useState(0);
@@ -51,9 +53,7 @@ function StudentsPage() {
 
   return (
     <div className="container mx-auto my-5">
-      <h2 className="text-xl font-semibold text-slate-800">
-        Liste des élèves
-      </h2>
+      <h2 className="text-xl font-semibold text-slate-800">Liste des élèves</h2>
       <p className="text-slate-500 mt-1 mb-6">
         Recherchez un élève par classe ou par nom.
       </p>
@@ -106,6 +106,7 @@ function StudentsPage() {
                 <tr>
                   <th>Élève</th>
                   <th>Classe</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -116,6 +117,16 @@ function StudentsPage() {
                     </td>
                     <td className="text-sm text-slate-600">
                       {getClassLevelName(student.classLevelId)}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <button
+                        onClick={() =>
+                          navigate(`/eleves/${student.id}/rapport-absences`)
+                        }
+                        className="btn"
+                      >
+                        Rapport d'absences
+                      </button>
                     </td>
                   </tr>
                 ))}
