@@ -21,16 +21,27 @@ function Navbar() {
   return (
     <nav className="sticky top-0 z-10 bg-white border-b border-slate-200">
       <div className="container mx-auto flex items-center justify-between px-4 py-2.5">
-        <Link to="/" className="flex items-center gap-2">
-          <img
-            src="/ptitpre.png"
-            alt="Logo"
-            className="w-9 h-9 object-contain"
-          />
-          <span className="font-semibold text-slate-800">
-            Gestion des absences
-          </span>
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2">
+            <img
+              src="/ptitpre.png"
+              alt="Logo"
+              className="w-9 h-9 object-contain"
+            />
+            <span className="font-semibold text-slate-800">
+              Gestion des absences
+            </span>
+          </Link>
+
+          {user && (
+            <Link
+              to="/eleves"
+              className="text-sm font-medium text-slate-600 hover:text-slate-800 transition"
+            >
+              Liste des élèves
+            </Link>
+          )}
+        </div>
 
         {user ? (
           <div

@@ -1,5 +1,9 @@
 import type { AxiosInstance } from "axios";
-import type { ParentAttributes } from "../models/interfaces";
+import type {
+  PaginatedResultDto,
+  ParentAttributes,
+  StudentAttributes,
+} from "../models/interfaces";
 import httpClient from "../api/HttpClient";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -27,6 +31,18 @@ export class StudentService {
 
   public async findParents(studentId: number): Promise<ParentAttributes[]> {
     const url = `/students/${studentId}/parents`;
+    const result = await this.http.get(url);
+    return result.data;
+  }
+
+  public async getAllPaginated(
+    page: number = 1,
+    class_level?: number,
+    name?: string,
+  ): Promise<PaginatedResultDto<StudentAttributes>> {
+    let url = `/students/paginated?page=${page}`;
+    if (class_level) url += `&class_level=${class_level}`;
+    if (name) url += `&name=${name}`;
     const result = await this.http.get(url);
     return result.data;
   }

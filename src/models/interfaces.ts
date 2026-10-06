@@ -63,6 +63,11 @@ export interface ClassLevelAttributes {
   name: string;
 }
 
+export interface PaginatedResultDto<T> {
+  members: T[];
+  totalItems: number;
+}
+
 export class StudentAttributes {
   id?: number;
   name?: string;

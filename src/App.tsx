@@ -5,6 +5,7 @@ import LoginPage from "./pages/login/login.page";
 import Navbar from "./components/navbar/navbar";
 import CreateAbsence from "./pages/create-absence/create-absence.page";
 import ConfirmerRetourPage from "./pages/confirmer-retour/confirmer-retour.page";
+import StudentsPage from "./pages/students/students.page";
 import { useAuth } from "./hooks/useAuth";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           Component={ConfirmerRetourPage}
           path="/absences/:id/confirmer-retour"
         />
+        <Route Component={StudentsPage} path="/eleves" />
       </Routes>
     </div>
   );
