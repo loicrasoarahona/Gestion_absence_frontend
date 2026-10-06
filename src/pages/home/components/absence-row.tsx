@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import type { AbsenceAttributes } from "../../../models/interfaces";
 import {
   formatAbsenceSince,
@@ -10,6 +11,7 @@ interface AbsenceRowProps {
 }
 
 function AbsenceRow({ absence, onOpenSendAlert }: AbsenceRowProps) {
+  const navigate = useNavigate();
   const alertStatus = getAlertStatus(absence.alerts);
 
   return (
@@ -37,7 +39,11 @@ function AbsenceRow({ absence, onOpenSendAlert }: AbsenceRowProps) {
           >
             Alerter les parents
           </button>
-          <button type="button" className="btn-primary cursor-pointer">
+          <button
+            type="button"
+            className="btn-primary cursor-pointer"
+            onClick={() => navigate(`/absences/${absence.id}/confirmer-retour`)}
+          >
             Confirmer le retour
           </button>
         </div>

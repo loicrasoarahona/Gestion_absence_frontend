@@ -2,6 +2,7 @@
 import type { AxiosInstance } from "axios";
 import type {
   AbsenceAttributes,
+  AbsenceReasonStdAttributes,
   AlertSentAttributes,
   AlertSentType,
   ClassLevelAttributes,
@@ -81,5 +82,33 @@ export class AbsenceService {
     const url = `/absences/${absenceId}/last-alert-sent?alertType=${alertType}`;
     const result = await this.http.get(url);
     return result.data;
+  }
+
+  public async sendAlert(
+    absenceId: number,
+    alertType: AlertSentType,
+    parentId?: number,
+  ) {
+    let url = `/absences/${absenceId}/send-alert?alertType=${alertType}`;
+    if (parentId) url += `&parentId=${parentId}`;
+    await this.http.post(url);
+  }
+
+  public async getReasonStds(): Promise<AbsenceReasonStdAttributes[]> {
+    const url = "/absence-reason-stds";
+    const result = await this.http.get(url);
+    return result.data;
+  }
+
+  public async sendAbsenceReturn(
+    absenceId: number,
+    body: {
+      returnDate: Date;
+      reasonStdId?: number;
+      reasonDetail: string;
+    },
+  ) {
+    const url = `/absences/${absenceId}/return`;
+    await this.http.post(url, body);
   }
 }

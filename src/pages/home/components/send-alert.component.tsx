@@ -11,6 +11,7 @@ import DOMPurify from "dompurify";
 
 interface Props {
   absence: AbsenceAttributes | null;
+  onSent?: () => void;
 }
 
 const ALERT_TABS: { type: AlertSentType; label: string; icon: string }[] = [
@@ -18,7 +19,7 @@ const ALERT_TABS: { type: AlertSentType; label: string; icon: string }[] = [
   { type: "phone", label: "Téléphone", icon: "bi-telephone" },
 ];
 
-const SendAlertComponent: React.FC<Props> = ({ absence }) => {
+const SendAlertComponent: React.FC<Props> = ({ absence, onSent }) => {
   const [alertType, setAlertType] = useState<AlertSentType>("phone");
   const [result, setResult] = useState<{
     key: string;
@@ -32,6 +33,8 @@ const SendAlertComponent: React.FC<Props> = ({ absence }) => {
   const [selectedParentId, setSelectedParentId] = useState<number | null>(
     null,
   );
+  const [isSending, setIsSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   const requestKey = absence != null ? `${absence.id}-${alertType}` : null;
   const isLoading = requestKey != null && result?.key !== requestKey;
@@ -85,6 +88,39 @@ const SendAlertComponent: React.FC<Props> = ({ absence }) => {
       ignore = true;
     };
   }, [absence, alertType]);
+
+  async function handleSend() {
+    if (absence?.id == null || selectedParentId == null) return;
+
+    setIsSending(true);
+    setSendError(null);
+
+    try {
+      await ServiceSelector.absenceService.sendAlert(
+        absence.id,
+        alertType,
+        selectedParentId,
+      );
+
+      const refreshedLastAlertSent =
+        await ServiceSelector.absenceService.getLastAlertSent(
+          absence.id,
+          alertType,
+        );
+      setResult({
+        key: `${absence.id}-${alertType}`,
+        message: messageBody ?? "",
+        lastAlertSent: refreshedLastAlertSent,
+      });
+
+      onSent?.();
+    } catch (err) {
+      console.error(err);
+      setSendError("L'envoi de l'alerte a échoué. Veuillez réessayer.");
+    } finally {
+      setIsSending(false);
+    }
+  }
 
   return (
     <div>
@@ -254,9 +290,20 @@ const SendAlertComponent: React.FC<Props> = ({ absence }) => {
         )}
       </div>
 
+      {sendError && (
+        <p className="mt-3 rounded-lg border border-danger-200 bg-danger-50 px-3 py-2 text-sm text-danger-700">
+          {sendError}
+        </p>
+      )}
+
       <div className="mt-5 flex justify-end gap-2 border-t border-slate-200 pt-3">
-        <button className="btn-primary" disabled={isLoading}>
-          Envoyer
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={handleSend}
+          disabled={isLoading || isSending || selectedParentId == null}
+        >
+          {isSending ? "Envoi..." : "Envoyer"}
         </button>
       </div>
     </div>

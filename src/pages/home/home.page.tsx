@@ -19,11 +19,15 @@ function HomePage() {
   const [selectedAbsence, setSelectedAbsence] =
     useState<AbsenceAttributes | null>(null);
 
-  useEffect(() => {
+  const loadAbsences = () => {
     ServiceSelector.absenceService
       .getOnGoingAbsences()
       .then(setAbsences)
       .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    loadAbsences();
   }, []);
 
   const handleOpenSendAlert = (absence: AbsenceAttributes) => {
@@ -82,7 +86,15 @@ function HomePage() {
       ))}
 
       <ModalComponent id="modal-send-alert" title="Envoyer alerte d'absence">
-        {() => <SendAlertComponent absence={selectedAbsence} />}
+        {(closeModal) => (
+          <SendAlertComponent
+            absence={selectedAbsence}
+            onSent={() => {
+              closeModal();
+              loadAbsences();
+            }}
+          />
+        )}
       </ModalComponent>
     </div>
   );

@@ -37,12 +37,12 @@ export function formatAbsenceSince(dateInput: Date | string): string {
       0,
       Math.floor((now.getTime() - date.getTime()) / 60000),
     );
-    if (diffMinutes < 1) return "Absent depuis moins d'une minute";
+    if (diffMinutes < 1) return "depuis moins d'une minute";
     if (diffMinutes < 60) {
-      return `Absent depuis ${diffMinutes} minute${diffMinutes > 1 ? "s" : ""}`;
+      return `depuis ${diffMinutes} minute${diffMinutes > 1 ? "s" : ""}`;
     }
     const diffHours = Math.floor(diffMinutes / 60);
-    return `Absent depuis ${diffHours} heure${diffHours > 1 ? "s" : ""}`;
+    return `depuis ${diffHours} heure${diffHours > 1 ? "s" : ""}`;
   }
 
   const day = date.getDate();
