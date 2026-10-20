@@ -4,7 +4,7 @@ import type {
   ParentAttributes,
   StudentAttributes,
 } from "../models/interfaces";
-import httpClient from "../api/HttpClient";
+import { createHttpClient } from "../api/HttpClient";
 import type { StudentAttendanceReportDto } from "../models/dto";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -13,21 +13,7 @@ export class StudentService {
   private readonly http: AxiosInstance;
 
   constructor() {
-    this.http = httpClient.create({ baseURL: apiUrl });
-    this.http.interceptors.request.use(
-      (config) => {
-        // Exemple : ajouter un token d'authentification
-        const token = localStorage.getItem("jwtoken");
-        if (token) {
-          config.headers["Authorization"] = `Bearer ${token}`;
-        }
-        console.log("Requête interceptée :", config.url);
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      },
-    );
+    this.http = createHttpClient(apiUrl);
   }
 
   public async findParents(studentId: number): Promise<ParentAttributes[]> {

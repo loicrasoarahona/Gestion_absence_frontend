@@ -8,7 +8,7 @@ import type {
   ClassLevelAttributes,
   StudentAttributes,
 } from "../models/interfaces";
-import httpClient from "../api/HttpClient";
+import { createHttpClient } from "../api/HttpClient";
 import type { createAbsenceDto } from "../models/dto";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -17,21 +17,7 @@ export class AbsenceService {
   private readonly http: AxiosInstance;
 
   constructor() {
-    this.http = httpClient.create({ baseURL: apiUrl });
-    this.http.interceptors.request.use(
-      (config) => {
-        // Exemple : ajouter un token d'authentification
-        const token = localStorage.getItem("jwtoken");
-        if (token) {
-          config.headers["Authorization"] = `Bearer ${token}`;
-        }
-        console.log("Requête interceptée :", config.url);
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      },
-    );
+    this.http = createHttpClient(apiUrl);
   }
 
   public async getOnGoingAbsences(): Promise<AbsenceAttributes[]> {
